@@ -47,6 +47,8 @@ public:
     char* decryption(char*, char*, string);
     char loop_Chars(char, int, bool);
     char loop_Nums(int, int, bool);
+
+    void txtOutput(HANDLE, int, bool, string);
 };
 
 class List {

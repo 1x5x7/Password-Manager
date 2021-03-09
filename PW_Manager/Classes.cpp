@@ -4,6 +4,7 @@
 #include <tchar.h>
 #include "Classes.h"
 ////////////////////
+
 Element::Element(char* pw, char* web): password(pw), website(web) {}
 Element::Element(Element* cop): password(cop->getPassword()), website(cop->getWebsite()) {}
 
@@ -496,7 +497,7 @@ char Password_Setup::loop_Nums(int i, int key, bool encr_decr) {
 			} else {
 				i += 6;
 			}
-		} else if (key >= 6) {
+		} else if (key >= 5) {
 			if (i >= 6) {
 				i -= 6;
 			} else {
@@ -511,8 +512,19 @@ char Password_Setup::loop_Nums(int i, int key, bool encr_decr) {
 		}
 
 		character = i + 48;
+
 		return character;
     }
+}
+
+void Password_Setup::txtOutput(HANDLE console, int color, bool line, string text) {
+    SetConsoleTextAttribute(console, color); //1 blau //2 green //3 hellblau //4 rot //5 lila //6 gold //7 silber  // 15 white
+    if (line) {
+        cout << text << endl;
+    } else {
+        cout << text;
+    }
+    SetConsoleTextAttribute(console, 15); //back to default (white)
 }
 
 List::List(int anzahl): anzahl(0), Max(anzahl - 2), Index(NULL) {
@@ -570,6 +582,9 @@ int List::suche(string website) {
 }
 
 void List::display() {
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+
+    cout << endl;
     if (this->anzahl-1 > 0) {
         if (this->anzahl-1 == 1 && this->suche(".W") != -1) {
             cout << "Fehler; Es existieren keine Passwoerter! Kehre zum Menue zurueck..." << endl;
@@ -583,6 +598,7 @@ void List::display() {
                 char* website = this->Index[i]->getWebsite();
                 char* password = this->Index[i]->getPassword();
                 bool existing_letter = false;
+                string str_web = "";
 
                 for (int j = 0; j < 3; j++) {
                     web = methods->appendChar(web, website[j]);
@@ -596,10 +612,12 @@ void List::display() {
                     }
 
                     if (!existing_letter) {
-                        cout << "__________________________________________________ " << website[0] << endl;
+                        str_web.append(website, 1);
+                        methods->txtOutput(hConsole, 6, true, str_web);
+                        str_web = "";
                     }
 
-                    cout << website << ": " << password << web << endl;
+                    cout << "   " << website << ": " << password << web << endl;
 
                     existing_letters = methods->appendChar(existing_letters, website[0]);
                     existing_letters_amount++;
@@ -621,6 +639,9 @@ void List::loeschen(int stelle, string path) {
     }
 
     this->anzahl--;
+
+    DWORD attributes = GetFileAttributes(path.c_str());
+    SetFileAttributes(path.c_str(), attributes & FILE_ATTRIBUTE_NORMAL);
     fileWrite.open(path.c_str());
 
     for (int i = 0; i < this->anzahl - 1; i++) {
@@ -680,8 +701,8 @@ int Files::file_Count() {
     ifstream fileRead(this->getFILE_PATH().c_str());
 
     if (fileRead.good()) {
-        //DWORD attributes = GetFileAttributes(this->getFILE_PATH());
-        //SetFileAttributes(this->getFILE_PATH(), attributes | FILE_ATTRIBUTE_HIDDEN);
+        DWORD attributes = GetFileAttributes(this->getFILE_PATH().c_str());
+        SetFileAttributes(this->getFILE_PATH().c_str(), attributes | FILE_ATTRIBUTE_HIDDEN);
 
         int counter = 0;
         string pw = "";
@@ -695,6 +716,9 @@ int Files::file_Count() {
     } else {
         ofstream fileCreate(this->getFILE_PATH().c_str());
         fileCreate.open(this->getFILE_PATH().c_str());
+
+        DWORD attributes = GetFileAttributes(this->getFILE_PATH().c_str());
+        SetFileAttributes(this->getFILE_PATH().c_str(), attributes | FILE_ATTRIBUTE_HIDDEN);
 
         return 0;
     }
@@ -748,6 +772,9 @@ void Files::file_Save(string website, char* encrypted, List* liste) {
     line.append(encrypted, 11);
     line.append(";");
     line.append(website_toUpper);
+
+    DWORD attributes = GetFileAttributes(this->getFILE_PATH().c_str());
+    SetFileAttributes(this->getFILE_PATH().c_str(), attributes & FILE_ATTRIBUTE_NORMAL);
 
     fileWrite.open(this->getFILE_PATH().c_str());
 

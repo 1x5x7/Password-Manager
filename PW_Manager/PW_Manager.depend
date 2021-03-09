@@ -37,20 +37,34 @@
 1580670829 source:c:\users\robert\desktop\pw_manager - kopie\classes.cpp
 	"Classes.h"
 
-1586523512 source:c:\users\robert\desktop\projects\c++\pw_manager\classes.cpp
+1603374562 source:c:\users\robert\desktop\projects\c++\pw_manager\classes.cpp
 	<time.h>
 	<fstream>
 	<shlobj.h>
 	<tchar.h>
 	"Classes.h"
 
-1586513410 c:\users\robert\desktop\projects\c++\pw_manager\classes.h
+1587411684 c:\users\robert\desktop\projects\c++\pw_manager\classes.h
 	<iostream>
 	<complex>
 	<Windows.h>
 	<winuser.h>
 	<Lmcons.h>
 
-1586521842 source:c:\users\robert\desktop\projects\c++\pw_manager\main.cpp
+1603550554 source:c:\users\robert\desktop\projects\c++\pw_manager\main.cpp
 	"Classes.h"
+
+1615296810 source:c:\users\robert\desktop\ides\c++\projects\pw_manager\classes.cpp
+	<time.h>
+	<fstream>
+	<shlobj.h>
+	<tchar.h>
+	"Classes.h"
+
+1587408084 c:\users\robert\desktop\ides\c++\projects\pw_manager\classes.h
+	<iostream>
+	<complex>
+	<Windows.h>
+	<winuser.h>
+	<Lmcons.h>
 

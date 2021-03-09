@@ -10,6 +10,8 @@ int main()
     DWORD username_len = UNLEN+1;
     GetUserName(username, &username_len);
 
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+
     string path = "";
     int Username_Length = 0;
 
@@ -34,24 +36,24 @@ int main()
     int input = 0, confirm = 0;
     string website, KEY;
 
-    cout << " __________________________________________________ " << endl;
-    cout << "| Version 1.2 @ Robert Schmidt                     |" << endl;
+    pw->txtOutput(hConsole, 14, true, " __________________________________________________ ");
+    pw->txtOutput(hConsole, 14, true, "| Version 1.5 @ Robert Schmidt                     |");
 
     while (true) {
         List* liste = files->file_Load();
         liste->quickSort(0, liste->getMax());
 
-        cout << " __________________________________________________ " << endl;
-        cout << "|                   HAUPTMENUE:                    |" << endl;
-        cout << "| (1) Vorhandenes Passwort entschluesseln          |" << endl;
-        cout << "| (2) Neues Passwort generieren und verschluesseln |" << endl;
-        cout << "| (3) Eigenes Passwort hinzufuegen                 |" << endl;
-        cout << "| (4) Alle verschluesselten Passwoerter ausgeben   |" << endl;
-        cout << "| (5) Vorhandenes Passwort loeschen                |" << endl;
-        cout << "| (6) Beenden                                      |" << endl;
-        cout << "|__________________________________________________|" << endl;
+        pw->txtOutput(hConsole, 15, true, " __________________________________________________ ");
+        pw->txtOutput(hConsole, 15, true, "|                   HAUPTMENUE:                    |");
+        pw->txtOutput(hConsole, 15, true, "| (1) Vorhandenes Passwort entschluesseln          |");
+        pw->txtOutput(hConsole, 15, true, "| (2) Neues Passwort generieren und verschluesseln |");
+        pw->txtOutput(hConsole, 15, true, "| (3) Eigenes Passwort hinzufuegen                 |");
+        pw->txtOutput(hConsole, 15, true, "| (4) Alle verschluesselten Passwoerter ausgeben   |");
+        pw->txtOutput(hConsole, 15, true, "| (5) Vorhandenes Passwort loeschen                |");
+        pw->txtOutput(hConsole, 15, true, "| (6) Beenden                                      |");
+        pw->txtOutput(hConsole, 15, true, "|__________________________________________________|");
 
-        cout << "=> ";
+        pw->txtOutput(hConsole, 2, false, "=> ");
         cin >> input;
 
         if (!cin.fail()) {
@@ -71,7 +73,7 @@ int main()
                 cout << "Geben Sie den Namen der Website ein, dessen Passwort Sie benoetigen." << endl;
 
                 do {
-                    cout << "=> ";
+                    pw->txtOutput(hConsole, 2, false, "=> ");
                     getline(cin, website);
 
                     if (website.size() < 3) {
@@ -85,7 +87,7 @@ int main()
                     bool loop = true;
                     cout << "Geben Sie Ihren 3-stelligen Key aus Grossbuchstaben zur Entschluesselung ein." << endl;
                         do {
-                            cout << "=> ";
+                            pw->txtOutput(hConsole, 2, false, "=> ");
                             getline(cin, KEY);
 
                             if (KEY.size() != 3) {
@@ -106,7 +108,9 @@ int main()
                         } while(loop);
 
                     output = pw->decryption(liste->getIndexPassword(liste->suche(website)), liste->getIndexWebsite(liste->suche(website)), KEY);
-                    cout << "Ihr entschluesseltes Passwort (Key: " << KEY << ") lautet: " << output << endl;
+
+                    cout << "Ihr entschluesseltes Passwort (Key: " << KEY << ") lautet: ";
+                    pw->txtOutput(hConsole, 11, true, string(output));
 
                     toClipboard(hwnd, (string) output);
                 }
@@ -121,7 +125,7 @@ int main()
                 cout << "Geben Sie den Namen der Website ein, fuer die Sie ein Passwort generieren moechten." << endl;
 
                 do {
-                    cout << "=> ";
+                    pw->txtOutput(hConsole, 2, false, "=> ");
                     getline(cin, website);
 
                     if (website.size() < 3) {
@@ -139,6 +143,8 @@ int main()
                         cout << pw->getPassword() << endl;
                         cout << "Sind Sie zufrieden mit diesem generierten Passwort? (Akzeptieren mit '1'; Ablehnen mit Sonstigem)" << endl;
 
+                        pw->txtOutput(hConsole, 2, false, "=> ");
+
                         cin >> confirm;
 
                         if (cin.fail()) { // neben sonstiger Zahleneingabe duerfen auch Buchstaben verwendet werden
@@ -151,7 +157,7 @@ int main()
                     cout << "Geben Sie einen 3-stelligen Key aus Grossbuchstaben zur Verschluesselung ein." << endl;
 
                     do {
-                        cout << "=> ";
+                        pw->txtOutput(hConsole, 2, false, "=> ");
                         getline(cin, KEY);
 
                         if (KEY.size() != 3) {
@@ -176,7 +182,8 @@ int main()
 
                     char* encrypted = pw->encryption(KEY);
 
-                    cout << "Ihr verschluesseltes Passwort (KEY: " << KEY << ") lautet: " << encrypted << endl;
+                    cout << "Ihr verschluesseltes Passwort (KEY: " << KEY << ") lautet: ";
+                    pw->txtOutput(hConsole, 11, true, string(encrypted));
 
                     files->file_Save(website, encrypted, liste);
                 }
@@ -194,7 +201,7 @@ int main()
                 cout << "Geben Sie den Namen der Website ein, fuer die Sie ein Passwort hinzufuegen moechten." << endl;
 
                 do {
-                    cout << "=> ";
+                    pw->txtOutput(hConsole, 2, false, "=> ");
                     getline(cin, website);
 
                     if (website.size() < 3) {
@@ -208,7 +215,7 @@ int main()
                     cout << "Geben Sie ein standardmaessiges Passwort ein, um es zu verschluesseln und zu speichern." << endl;
                     cout << "Formate: (AAAAAAA$111), (111$AAAAAAA), (AAAAAAA111$)" << endl;
 
-                    cout << "=> ";
+                    pw->txtOutput(hConsole, 2, false, "=> ");
                     getline(cin, passw);
 
                     if (passw.size() != 11) {
@@ -228,7 +235,7 @@ int main()
                             cout << "Geben Sie einen 3-stelligen Key aus Grossbuchstaben zur Verschluesselung ein." << endl;
 
                             do {
-                                cout << "=> ";
+                                pw->txtOutput(hConsole, 2, false, "=> ");
                                 getline(cin, KEY);
 
                                 if (KEY.size() != 3) {
@@ -253,7 +260,8 @@ int main()
 
                         char* encrypted = custom_pw->encryption(KEY);
 
-                        cout << "Ihr verschluesseltes Passwort (KEY: " << KEY << ") lautet: " << encrypted << endl;
+                        cout << "Ihr verschluesseltes Passwort (KEY: " << KEY << ") lautet: ";
+                        pw->txtOutput(hConsole, 11, true, string(encrypted));
 
                         files->file_Save(website, encrypted, liste);
                     } else {
@@ -280,16 +288,15 @@ int main()
                     cout << "Bitte erstellen Sie eine Administrator-PIN aus vier Ziffern." << endl;
 
                     do {
-                        cout << "=> ";
+                        pw->txtOutput(hConsole, 2, false, "=> ");
                         cin >> pin;
 
                         if (cin.fail()) {
-                            cout << "Fehler; Bitte bedienen Sie das Menue mit entsprechenden Zahleingaben!" << endl;
-                            cout << endl;
+                            cout << "Fehler; PIN darf nur aus Ziffern bestehen! Versuchen Sie es erneut." << endl;
                             cin.clear();
                             cin.sync();
                         } else if (pin > 9999 || pin < 1000) {
-                            cout << "Fehler; PIN muss aus vier Ziffern bestehen. Versuchen Sie es erneut." << endl;
+                            cout << "Fehler; PIN muss aus genau vier Ziffern bestehen. Versuchen Sie es erneut." << endl;
                         }
                     } while(pin > 9999 || pin < 1000);
 
@@ -313,7 +320,7 @@ int main()
                     cout << "Bitte geben Sie Ihre Administrator-PIN ein." << endl;
 
                     do {
-                        cout << "=> ";
+                        pw->txtOutput(hConsole, 2, false, "=> ");
                         cin >> pin;
 
                         if (pin.size() != 4) {
@@ -331,7 +338,7 @@ int main()
                         cout << "Geben Sie den Namen der Website ein, dessen Passwort Sie loeschen moechten." << endl;
 
                         do {
-                            cout << "=> ";
+                            pw->txtOutput(hConsole, 2, false, "=> ");
                             getline(cin, website);
 
                             if (website.size() < 3) {
